@@ -1,0 +1,58 @@
+# Exchange settings
+exchange:
+  name: binance
+  mode: backtest  # backtest | paper | live
+
+# Trading pairs
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+
+# Timeframes
+timeframes:
+  trend: 1h
+  mean_reversion: 15m
+
+# Data settings
+data:
+  history_years: 2
+
+# Strategy: Trend Following
+strategies:
+  trend_following:
+    enabled: true
+    ma_fast: 20
+    ma_slow: 50
+    adx_period: 14
+    adx_threshold: 25
+    atr_period: 14
+    atr_critical_multiplier: 3.0
+    max_hold_bars: 200
+
+  # Strategy: Mean Reversion
+  mean_reversion:
+    enabled: true
+    rsi_period: 14
+    rsi_oversold: 30
+    rsi_overbought: 70
+    bb_period: 20
+    bb_std: 2.0
+    trend_filter_ma: 50
+    trend_filter_threshold: 0.02
+    max_hold_bars: 50
+    cooldown_bars: 10
+
+# Backtesting settings
+backtest:
+  initial_capital: 10000
+  position_size_pct: 0.20  # 20% of equity per position
+  slippage_bps: 10
+  maker_fee: 0.001
+  taker_fee: 0.001
+  start_date: null  # null = auto (data_history_years ago)
+  end_date: null  # null = latest available
+
+# Logging
+logging:
+  level: INFO
+  file: logs/trading.log
