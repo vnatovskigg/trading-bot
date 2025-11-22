@@ -1,0 +1,57 @@
+# Optimized configuration based on analysis
+# Key changes from default:
+# 1. Higher ADX threshold to reduce false signals
+# 2. Stricter RSI thresholds for mean reversion
+# 3. Longer cooldown periods to reduce overtrading
+# 4. Larger position sizes (less frequent but bigger trades)
+
+exchange:
+  name: binance
+  mode: backtest
+
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+
+timeframes:
+  trend: 1h
+  mean_reversion: 15m
+
+data:
+  history_years: 2
+
+strategies:
+  trend_following:
+    enabled: true
+    ma_fast: 20
+    ma_slow: 100        # Increased from 50 (slower to react, stronger signals)
+    adx_period: 14
+    adx_threshold: 30   # Increased from 25 (only trade stronger trends)
+    atr_period: 14
+    atr_critical_multiplier: 3.0
+    max_hold_bars: 300  # Increased from 200 (let winners run longer)
+
+  mean_reversion:
+    enabled: true
+    rsi_period: 14
+    rsi_oversold: 25    # More extreme (from 30)
+    rsi_overbought: 75  # More extreme (from 70)
+    bb_period: 20
+    bb_std: 2.5         # Wider bands (from 2.0) - only trade extreme moves
+    trend_filter_ma: 50
+    trend_filter_threshold: 0.03  # Stronger trend filter (from 0.02)
+    max_hold_bars: 40   # Shorter hold (from 50) - quick in/out
+    cooldown_bars: 25   # Longer cooldown (from 10) - reduce overtrading
+
+backtest:
+  initial_capital: 10000
+  position_size_pct: 0.30  # Increased from 0.20 (fewer but bigger trades)
+  slippage_bps: 10
+  maker_fee: 0.001
+  taker_fee: 0.001
+  start_date: null
+  end_date: null
+
+logging:
+  level: INFO
+  file: logs/trading.log

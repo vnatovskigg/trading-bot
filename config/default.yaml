@@ -22,30 +22,30 @@ strategies:
   trend_following:
     enabled: true
     ma_fast: 20
-    ma_slow: 50
+    ma_slow: 100              # OPTIMIZED: Changed from 50 (fewer whipsaws)
     adx_period: 14
-    adx_threshold: 25
+    adx_threshold: 30         # OPTIMIZED: Changed from 25 (stronger trends only)
     atr_period: 14
     atr_critical_multiplier: 3.0
-    max_hold_bars: 200
+    max_hold_bars: 300        # OPTIMIZED: Changed from 200 (let winners run)
 
   # Strategy: Mean Reversion
   mean_reversion:
     enabled: true
     rsi_period: 14
-    rsi_oversold: 30
-    rsi_overbought: 70
+    rsi_oversold: 25          # OPTIMIZED: Changed from 30 (more extreme)
+    rsi_overbought: 75        # OPTIMIZED: Changed from 70 (more extreme)
     bb_period: 20
-    bb_std: 2.0
+    bb_std: 2.5               # OPTIMIZED: Changed from 2.0 (wider bands)
     trend_filter_ma: 50
-    trend_filter_threshold: 0.02
-    max_hold_bars: 50
-    cooldown_bars: 10
+    trend_filter_threshold: 0.03  # OPTIMIZED: Changed from 0.02 (stricter)
+    max_hold_bars: 40         # OPTIMIZED: Changed from 50 (quicker exits)
+    cooldown_bars: 25         # OPTIMIZED: Changed from 10 (reduce overtrading)
 
 # Backtesting settings
 backtest:
   initial_capital: 10000
-  position_size_pct: 0.20  # 20% of equity per position
+  position_size_pct: 0.30  # OPTIMIZED: Changed from 0.20 (bigger positions, fewer trades)
   slippage_bps: 10
   maker_fee: 0.001
   taker_fee: 0.001

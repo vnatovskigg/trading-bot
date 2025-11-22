@@ -57,7 +57,8 @@ class BacktestEngine:
         symbol: str,
         timeframe: str,
         start_date: datetime,
-        end_date: datetime
+        end_date: datetime,
+        regime_timeframe: Optional[str] = None
     ) -> BacktestResult:
         """Run backtest for a symbol and time range.
 
@@ -66,6 +67,7 @@ class BacktestEngine:
             timeframe: Timeframe for strategy
             start_date: Backtest start date
             end_date: Backtest end date
+            regime_timeframe: Optional higher timeframe for regime detection
 
         Returns:
             BacktestResult with performance metrics
@@ -74,6 +76,8 @@ class BacktestEngine:
         print(f"BACKTEST: {symbol} on {timeframe}")
         print(f"Strategy: {self.strategy.name}")
         print(f"Period: {start_date.date()} to {end_date.date()}")
+        if regime_timeframe:
+            print(f"Regime timeframe: {regime_timeframe}")
         print(f"{'='*60}\n")
 
         # Reset strategy state
@@ -87,6 +91,12 @@ class BacktestEngine:
             return None
 
         print(f"Loaded {len(all_bars)} candles")
+
+        # Get higher timeframe data if needed for regime filter
+        regime_bars = None
+        if regime_timeframe and self.strategy.config.get('use_regime_filter', False):
+            regime_bars = self.data_provider.get_bars(symbol, regime_timeframe, start_date, end_date)
+            print(f"Loaded {len(regime_bars)} regime candles ({regime_timeframe})")
 
         # Determine warmup period
         warmup_bars = self.strategy.get_warmup_period()
@@ -110,6 +120,15 @@ class BacktestEngine:
                 historical_bars,
                 indicators
             )
+
+            # Add regime indicators if available
+            if regime_bars is not None:
+                regime_indicators = self._calculate_regime_indicators(
+                    regime_bars,
+                    current_timestamp,
+                    indicators
+                )
+                calculated_indicators.update(regime_indicators)
 
             # Get strategy signal
             target_position = self.strategy.on_new_candle(
@@ -175,6 +194,10 @@ class BacktestEngine:
             indicators['sma_trend'] = SMA(config.get('trend_filter_ma', 50))
             indicators['atr'] = ATR(config.get('atr_period', 14))
 
+            # Market regime filter (for v2 strategy)
+            if config.get('use_regime_filter', False):
+                indicators['regime_adx'] = ADX(config.get('adx_period', 14))
+
         return indicators
 
     def _calculate_indicators(
@@ -190,7 +213,10 @@ class BacktestEngine:
         lows = bars.get_lows()
 
         for name, indicator in indicators.items():
-            if name.startswith('sma_'):
+            if name == 'regime_adx':
+                # Skip regime ADX here - calculated separately
+                continue
+            elif name.startswith('sma_'):
                 result[name] = indicator.calculate(closes)
             elif name == 'adx':
                 adx, plus_di, minus_di = indicator.calculate(highs, lows, closes)
@@ -206,6 +232,46 @@ class BacktestEngine:
                 result['bb_lower'] = lower
             elif name == 'atr':
                 result['atr'] = indicator.calculate(highs, lows, closes)
+
+        return result
+
+    def _calculate_regime_indicators(
+        self,
+        regime_bars: BarSeries,
+        current_timestamp: datetime,
+        indicators: Dict
+    ) -> Dict[str, pd.Series]:
+        """Calculate regime indicators from higher timeframe data.
+
+        Args:
+            regime_bars: Higher timeframe bar data
+            current_timestamp: Current timestamp from lower timeframe
+            indicators: Indicator objects
+
+        Returns:
+            Dict with regime indicator values aligned to current timestamp
+        """
+        result = {}
+
+        if 'regime_adx' not in indicators:
+            return result
+
+        # Get regime bars up to current time (no look-ahead)
+        regime_df = regime_bars.df[regime_bars.df.index <= current_timestamp]
+
+        if len(regime_df) == 0:
+            return result
+
+        # Calculate regime ADX
+        regime_bar_series = BarSeries(regime_df)
+        highs = regime_bar_series.get_highs()
+        lows = regime_bar_series.get_lows()
+        closes = regime_bar_series.get_closes()
+
+        adx, _, _ = indicators['regime_adx'].calculate(highs, lows, closes)
+
+        # Return the most recent value as a series (for compatibility)
+        result['regime_adx'] = adx
 
         return result
 

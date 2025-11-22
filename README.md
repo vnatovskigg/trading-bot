@@ -57,7 +57,7 @@ trader/
 ├── backtest/            # Backtesting engine
 ├── database/            # Database connection utilities
 ├── logs/                # Log files
-├── results/             # Backtest results
+├── experiments/         # Backtest results
 ├── tests/               # Unit and integration tests
 └── docker/              # Docker configuration
 ```

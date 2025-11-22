@@ -1,0 +1,54 @@
+# Configuration v1.1 - Optimized
+# Date: 2025-11-22
+# Description: First optimization - reduced trade frequency, stronger filters
+
+exchange:
+  name: binance
+  mode: backtest
+
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+
+timeframes:
+  trend: 1h
+  mean_reversion: 15m
+
+data:
+  history_years: 2
+
+strategies:
+  trend_following:
+    enabled: true
+    ma_fast: 20
+    ma_slow: 100              # Changed from 50
+    adx_period: 14
+    adx_threshold: 30         # Changed from 25
+    atr_period: 14
+    atr_critical_multiplier: 3.0
+    max_hold_bars: 300        # Changed from 200
+
+  mean_reversion:
+    enabled: true
+    rsi_period: 14
+    rsi_oversold: 25          # Changed from 30
+    rsi_overbought: 75        # Changed from 70
+    bb_period: 20
+    bb_std: 2.5               # Changed from 2.0
+    trend_filter_ma: 50
+    trend_filter_threshold: 0.03  # Changed from 0.02
+    max_hold_bars: 40         # Changed from 50
+    cooldown_bars: 25         # Changed from 10
+
+backtest:
+  initial_capital: 10000
+  position_size_pct: 0.30  # Changed from 0.20
+  slippage_bps: 10
+  maker_fee: 0.001
+  taker_fee: 0.001
+  start_date: null
+  end_date: null
+
+logging:
+  level: INFO
+  file: logs/trading.log

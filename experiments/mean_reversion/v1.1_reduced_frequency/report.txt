@@ -1,0 +1,37 @@
+============================================================
+BACKTEST REPORT
+============================================================
+
+Strategy: MeanReversion
+Symbol: BTC/USDT
+Timeframe: 15m
+Period: 2024-11-22 to 2025-11-22
+Initial Capital: $10,000.00
+Final Equity: $8,252.90
+
+
+Performance Metrics:
+====================
+Returns:
+  Total Return:         -17.47%
+  CAGR:                 -17.53%
+
+Risk-Adjusted:
+  Volatility (ann.):    281.84%
+  Sharpe Ratio:           -0.06
+  Sortino Ratio:          -0.02
+
+Drawdown:
+  Max Drawdown:          56.51%
+  Max DD Duration:        33166 periods
+
+Trades:
+  Total Trades:             155
+  Win Rate:              43.23%
+  Avg Win:           $     17.00
+  Avg Loss:          $    -28.03
+  Profit Factor:           0.46
+
+Exposure:
+  Time in Market:        50.00%
+

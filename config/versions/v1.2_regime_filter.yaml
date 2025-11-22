@@ -1,0 +1,59 @@
+# Configuration v1.2 - Market Regime Filter
+# Date: 2025-11-22
+# Description: Mean reversion with market regime awareness (only trade in ranging markets)
+
+exchange:
+  name: binance
+  mode: backtest
+
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+
+timeframes:
+  trend: 1h
+  mean_reversion: 15m
+  regime: 4h  # NEW: Higher timeframe for regime detection
+
+data:
+  history_years: 2
+
+strategies:
+  trend_following:
+    enabled: true
+    ma_fast: 20
+    ma_slow: 100
+    adx_period: 14
+    adx_threshold: 30
+    atr_period: 14
+    atr_critical_multiplier: 3.0
+    max_hold_bars: 300
+
+  mean_reversion:
+    enabled: true
+    version: 2  # NEW: Using MeanReversionV2Strategy
+    rsi_period: 14
+    rsi_oversold: 25
+    rsi_overbought: 75
+    bb_period: 20
+    bb_std: 2.5
+    trend_filter_ma: 50
+    trend_filter_threshold: 0.03
+    max_hold_bars: 40
+    cooldown_bars: 25
+    # NEW: Market regime parameters
+    use_regime_filter: true
+    regime_adx_threshold: 25  # Only trade when 4h ADX < 25 (ranging market)
+
+backtest:
+  initial_capital: 10000
+  position_size_pct: 0.30
+  slippage_bps: 10
+  maker_fee: 0.001
+  taker_fee: 0.001
+  start_date: null
+  end_date: null
+
+logging:
+  level: INFO
+  file: logs/trading.log

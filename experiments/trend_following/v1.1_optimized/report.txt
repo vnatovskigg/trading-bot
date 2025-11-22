@@ -1,0 +1,37 @@
+============================================================
+BACKTEST REPORT
+============================================================
+
+Strategy: TrendFollowing
+Symbol: BTC/USDT
+Timeframe: 1h
+Period: 2024-11-22 to 2025-11-22
+Initial Capital: $10,000.00
+Final Equity: $11,231.52
+
+
+Performance Metrics:
+====================
+Returns:
+  Total Return:          12.32%
+  CAGR:                  12.54%
+
+Risk-Adjusted:
+  Volatility (ann.):    500.63%
+  Sharpe Ratio:            0.03
+  Sortino Ratio:           0.02
+
+Drawdown:
+  Max Drawdown:          54.07%
+  Max DD Duration:         8081 periods
+
+Trades:
+  Total Trades:             118
+  Win Rate:              31.36%
+  Avg Win:           $     53.27
+  Avg Loss:          $    -37.90
+  Profit Factor:           0.64
+
+Exposure:
+  Time in Market:        50.00%
+
