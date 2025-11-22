@@ -10,10 +10,6 @@ A Python-based automated trading system that combines trend-following and mean-r
 - **Paper Trading**: Test on Binance testnet before going live
 - **Risk Management**: Portfolio-level controls and position sizing
 
-## Architecture
-
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for detailed architecture and implementation status.
-
 ## Quick Start
 
 ### 1. Start the Database
@@ -65,12 +61,6 @@ trader/
 ├── tests/               # Unit and integration tests
 └── docker/              # Docker configuration
 ```
-
-## Development Status
-
-Current Phase: **MVP - Data Layer** (In Progress)
-
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for detailed progress tracking.
 
 ## Testing
 
